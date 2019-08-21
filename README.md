@@ -58,7 +58,7 @@ CELERYBEAT_SCHEDULE中指定了tasks.add这个任务每10秒跑一次，执行�
 之后可以看到每10秒都会自动执行一次tasks.add。
 
 >beat和worker进程可以一并启动：  
->`$ celery -A -A projb worker -l info`
+>`$ celery -B -A projb worker -l info`
 
 ## 4. worker管理
 
