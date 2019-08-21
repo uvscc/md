@@ -2,8 +2,6 @@
 
 ## 1. 启动
 
-### 1.2 前台启动
-
     // proj是目录，proj目录下有celery.py文件
     $ celery -A proj worker -l info
 
@@ -33,7 +31,36 @@
     In  : from celery.result import AsyncResult
     In  : AsyncResult(task_id).get()  # 获取结果方式二
 
-## 3. worker管理
+## 3. 任务调度
+
+使用celery的beat进程自动生成任务。创建一个projb目录，对projb/celeryconfig.py添加如下配置：
+
+```python
+CELERYBEAT_SCHEDULE = {
+    'add': {
+        'task': 'projb.tasks.add',
+        'schedule': timedelta(seconds=10),
+        'args': (16, 16)
+    }
+}
+```
+
+CELERYBEAT_SCHEDULE中指定了tasks.add这个任务每10秒跑一次，执行的时候参数是16和16
+
+启动beat程序：
+
+    $ celery beat -A projb
+
+然后启动worker进程：
+
+    $ celery -A projb worker -l info
+
+之后可以看到每10秒都会自动执行一次tasks.add。
+
+>beat和worker进程可以一并启动：  
+>`$ celery -A -A projb worker -l info`
+
+## 4. worker管理
 
 使用`multi`子命令管理worker，如用daemon方式启动worker进程：
 
@@ -47,7 +74,7 @@ web是对项目启动的标识，之后都是用这个标识来管理，%n是格
     $ celery multi restart web
     $ celery multi kill web  # 杀掉web进程
 
-## 4. 监控和管理celery
+## 5. 监控和管理celery
 
 1. `shell`: python交互环境，内置了celery应用实例和全部已注册的任务  
     支持默认的Python解释器、IPython、BPython
@@ -68,7 +95,7 @@ web是对项目启动的标识，之后都是用这个标识来管理，%n是格
 
         $ celery -A proj inspect stats
 
-## 4. 子任务
+## 6. 子任务
 
 可以把任务通过签名的方法传给其它任务，成为一个子任务：
 
