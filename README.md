@@ -114,12 +114,13 @@ add.subtask同样可以使用快捷方式`add.s(2, 2, countdown=10)`
 4. `map/starmap`: 每个参数都作为任务的参数执行一遍，`map`的参数只有一个，`starmap`支持的参数有多个。
 
         In  : ~add.starmap(zip(range(10), range(10)))
+        
     // 相当于
-     ```python
-     @app.task
-     def temp():
-     return [add(i,i) for i in range(10)]
-     ```
+    ```python
+    @app.task
+    def temp():
+    return [add(i,i) for i in range(10)]
+    ```
 
 5. `chunks`: 将任务分块。
 
